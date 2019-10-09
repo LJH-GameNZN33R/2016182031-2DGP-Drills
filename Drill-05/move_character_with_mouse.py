@@ -17,14 +17,15 @@ def handle_events():
             running = False
 
         elif event.type == SDL_MOUSEMOTION:
-            clear_canvas()
-            curser.draw(x, y)
+            if x != event.x or y != event.y:
+                x = event.x
+                y = KPU_HEIGHT - 1 - event.y
+                curser.draw(x, y)
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if not running:
                 running = True
             x, y = event.x, KPU_HEIGHT - 1 - event.y
-
             x, y = event.x - 20, KPU_HEIGHT - 1 - event.y + 20
             if x < character_x:
                 character_direction = 0
@@ -42,7 +43,7 @@ x, y = 0, 0
 character_x, character_y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 character_direction = 1
 frame = 0
-show_cursor()
+hide_cursor()
 
 while running:
     clear_canvas()
