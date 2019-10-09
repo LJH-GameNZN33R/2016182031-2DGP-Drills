@@ -32,7 +32,7 @@ def handle_events():
 open_canvas(KPU_WIDTH, KPU_HEIGHT)
 kpu_ground = load_image('KPU_GROUND.png')
 curser = load_image('hand_arrow.png')
-character = load_image('run_animation.png')
+character = load_image('animation_sheet.png')
 
 running = True
 x, y = 0, 0
@@ -49,6 +49,10 @@ while running:
         if x == character_x and y == character_y:
             x = 0
             y = 0
+        elif character_x <= x:
+            character_direction = 1
+        elif character_x >= x:
+            character_direction = 0
         character_x += (x - character_x) / 100
         character_y += (y - character_y) / 100
 
