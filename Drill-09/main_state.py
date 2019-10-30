@@ -10,14 +10,11 @@ import game_framework
 from boy import Boy
 from grass import Grass
 
-
-
 name = "MainState"
 
 boy = None
 grass = None
 font = None
-
 
 
 def enter():
@@ -30,7 +27,6 @@ def exit():
     global boy, grass
     del boy
     del grass
-
 
 
 def pause():
@@ -47,14 +43,14 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                game_framework.quit()
+            game_framework.quit()
         else:
             boy.handle_event(event)
 
 
-
 def update():
     boy.update()
+
 
 def draw():
     clear_canvas()
