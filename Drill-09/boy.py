@@ -1,7 +1,7 @@
 from pico2d import *
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, LSHIFT_DOWN, LSHIFT_UP, DASH_STOP_TIMER = range(7)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, LSHIFT_DOWN, LSHIFT_UP, DASH_STOP_TIMER, SLEEP_TIMER, SPACE = range(9)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -9,12 +9,18 @@ key_event_table = {
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
     (SDL_KEYDOWN, SDLK_LSHIFT): LSHIFT_DOWN,
-    (SDL_KEYUP, SDLK_LSHIFT): LSHIFT_UP
+    (SDL_KEYUP, SDLK_LSHIFT): LSHIFT_UP,
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
+
+
+def fire_ball(self):
+    print('FIRE BALL')
 
 
 # Boy States
 class IdleState:
+
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
@@ -29,12 +35,15 @@ class IdleState:
 
     @staticmethod
     def exit(boy, event):
-        pass
+        if event == SPACE:
+            boy.fire_ball()
 
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
+        if boy.timer == 0:
+            boy.add_event(SLEEP_TIMER)
 
     @staticmethod
     def draw(boy):
@@ -66,7 +75,8 @@ class RunState:
 
     @staticmethod
     def exit(boy, event):
-        pass
+        if event == SPACE:
+            boy.fire_ball()
 
     @staticmethod
     def do(boy):
@@ -81,6 +91,29 @@ class RunState:
             boy.image.clip_draw(boy.frame * 100, 100, 100, 100, boy.x, boy.y)
         else:
             boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
+
+
+class SleepState:
+    @staticmethod
+    def enter(boy, event):
+        boy.frame = 0
+
+    @staticmethod
+    def exit(boy, event):
+        pass
+
+    @staticmethod
+    def do(boy):
+        boy.frame = (boy.frame + 1) % 8
+
+    @staticmethod
+    def draw(boy):
+        if boy.dir == 1:
+            boy.image.clip_composite_draw(boy.frame * 100, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100,
+                                          100)
+        else:
+            boy.image.clip_composite_draw(boy.frame * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25,
+                                          100, 100)
 
 
 class DashState:
@@ -128,10 +161,15 @@ class DashState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState,
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
-                LSHIFT_UP: IdleState, LSHIFT_DOWN: IdleState},
+                LSHIFT_UP: IdleState, LSHIFT_DOWN: IdleState,
+                SLEEP_TIMER: SleepState, SPACE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
                LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
-               LSHIFT_DOWN: DashState, LSHIFT_UP: RunState},
+               LSHIFT_DOWN: DashState, LSHIFT_UP: RunState,
+               SPACE: RunState},
+    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
+                 LEFT_UP: RunState, RIGHT_UP: RunState,
+                 SPACE: IdleState},
     DashState: {RIGHT_UP: DashState, LEFT_UP: DashState,
                 RIGHT_DOWN: DashState, LEFT_DOWN: DashState,
                 LSHIFT_DOWN: DashState, LSHIFT_UP: RunState,
