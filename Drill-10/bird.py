@@ -7,7 +7,7 @@ import game_world
 # bird velocity : 30km/h
 
 PIXEL_PER_METER = (10.0 / 0.25)
-FLY_SPEED_KMPH = 20.0  # km/h
+FLY_SPEED_KMPH = 30.0  # km/h
 FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
 FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
 FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
