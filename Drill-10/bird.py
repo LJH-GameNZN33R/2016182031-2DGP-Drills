@@ -3,7 +3,7 @@ from pico2d import *
 import game_world
 
 # 10 pixel = 25 cm
-# bird size : 1.0m -> 40 pixel
+# bird size : 2.0m -> 80 pixel
 # bird velocity : 30km/h
 
 PIXEL_PER_METER = (10.0 / 0.25)
@@ -12,12 +12,13 @@ FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
 FLY_SPEED_MPS = (FLY_SPEED_MPM / 60.0)
 FLY_SPEED_PPS = (FLY_SPEED_MPS * PIXEL_PER_METER)
 
-BIRD_SIZE_M = 1
+BIRD_SIZE_M = 2
 BIRD_SIZE_PIXEL = BIRD_SIZE_M * PIXEL_PER_METER
 
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 14
+
 
 class Bird:
     def __init__(self):

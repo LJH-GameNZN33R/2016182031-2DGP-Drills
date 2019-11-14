@@ -7,23 +7,28 @@ import game_framework
 import game_world
 
 from boy import Boy
+from bird import Bird
 from grass import Grass
-
 
 name = "MainState"
 
 boy = None
 
+
 def enter():
     global boy
+    global bird
     boy = Boy()
+    bird = Bird()
     grass = Grass()
     game_world.add_object(grass, 0)
     game_world.add_object(boy, 1)
+    game_world.add_object(bird, 1)
 
 
 def exit():
     game_world.clear()
+
 
 def pause():
     pass
@@ -39,7 +44,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                game_framework.quit()
+            game_framework.quit()
         else:
             boy.handle_event(event)
 
@@ -55,9 +60,3 @@ def draw():
     for game_object in game_world.all_objects():
         game_object.draw()
     update_canvas()
-
-
-
-
-
-
